@@ -54,5 +54,50 @@
   <p> - N3254: 바이트 배열에 접근하기, 버전 4 </p>
   <p> - N3259: 복소수에서의 ++, -- 지원 </p>
   <p> - N3260: _Generic에서 타입 피연산자를 선택하기 </p>
+
+
+  <h1> HTML 2일차 </h1>
+  <p> 공부한 자료: <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Basic_HTML_syntax">Mozilla Developer Network 학습자료의 기초 HTML 문법</a> </p>
+  <h3> 요소 안의 요소 </h2>
+  <p> 
+    구성요소 안에 구성요소를 적는 문법은 <code> &lt;바깥요소이름&gt; 바깥요소내용1 &lt;안요소이름&gt; 안요소내용 &lt;/안요소이름&gt; 바깥요소내용2 &lt;/바깥요소이름&gt; </code>이다. 
+    요소 안에 요소를 계속 추가할 수 있다.
+  </p>
+  <h3> 속성 </h2>
+    <p> 
+      속성은 요소에 대한 정보를 주는 것인데, 요소의 내용이 아니어서 보이지는 않는다.  
+      <code> &lt;요소이름 속성이름="속성값"&gt; </code> 형식으로 쓴다.  
+      속성 문법의 규칙으로, 먼저 속성이름과 요소이름 사이에 띄어쓰기가 있어야 한다. 
+      속성 여러개를 쓸 때도 속성들 사이에 띄어쓰기가 있어야 한다.
+      속성 이름 다음에 등호 <code> = </code>가 있어야 한다.
+      등호 다음에 속성 값이 따옴표 <code> ' ' </code> 또는 <code> " " </code> 안에 있어야 한다. 
+    </p>
+  <h3> 비어있는 요소 </h2>
+    <p> 
+      어떤 요소는 안에 들어가는 내용이 없다. 그래서 다음과 같이 태그에 속성만 적고, 닫는 태그와 내용은 쓰지 않아도 된다.
+      <code> &lt;요소이름 속성 /&gt; </code>
+      HTML에서는 <code>/</code>가 없어도 되지만, XML 문법과의 호환성을 위해 쓰는 것이 좋다. 
+    </p>
+  <h3> 비어있는 요소와 속성의 예시 </h3>
+  <p>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img"><code> &lt;img src="그림파일경로" 기타속성="기타속성값" /&gt; </code></a>
+    웹페이지에 이미지를 넣는다. 
+    src 속성은 반드시 필요하며, 이미지 파일의 경로를 정한다. 
+  </p>
+  <p>
+    예제 코드: &lt;img src="/program.png" /&gt;
+  </p>
+  <p> 실행 결과: <img src="/program.png" /> </p>
+  <p> <code> width </code> 속성은 이미지의 너비를 픽셀 단위로 정한다. </p>
+  <p>
+    예제 코드: &lt;img src="/program.png" width="300" /&gt;
+  </p>
+  <p> 실행 결과: <img src="/program.png" width="300" /> </p>
+  <p> <code> height </code> 속성은 이미지의 높이를 픽셀 단위로 정한다. </p>
+  <p>
+    예제 코드: &lt;img src="/program.png" width="300" height="150" /&gt;
+  </p>
+  <p> 실행 결과: <img src="/program.png" width="300" height="150" /> </p>
+
 </body>
 </html>
