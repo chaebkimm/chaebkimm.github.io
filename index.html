@@ -260,34 +260,96 @@
   <p> 11.4 void형 </p>
   <p> 11.5 기타 자료형 </p>
   <p> 11.6 타입이 정해지는 규칙 </p>
-  <p> 12 상수 </p>
-  <p> 13 자료형 크기 </p>
-  <p> 14 포인터 </p>
-  <p> 15 구조체 </p>
-  <p> 16 배열 </p>
-  <p> 17 열거형 </p>
-  <p> 18 자료형 이름 정의 </p>
-  <p> 19 문장 </p>
-  <p> 20 변수 </p>
-  <p> 21 자료형 한정자 </p>
-  <p> 22 함수 </p>
-  <p> 23 호환되는 자료형 </p>
-  <p> 24 형변환 </p>
-  <p> 25 유효범위 </p>
-  <p> 26 전처리 </p>
-  <p> 27 고급 정수 </p>
-  <p> 28 고급 부동소수점 </p>
-  <p> 29 컴파일 </p>
-  <p> 30 컴파일 지시하기 </p>
-  <p> 붙임 A 자료형 정렬 </p>
-  <p> 붙임 B 메모리 값을 다른 자료형으로 쓰기 </p>
-  <p> 붙임 C 별칭 </p>
-  <p> 붙임 D 선언에서의 속성 </p>
-  <p> 붙임 E 신호 </p>
-  <p> 붙임 F GNU 자유 문서 라이선스 </p>
-  <p> 붙임 G GNU 일반 공공 라이선스 </p>
-  <p> 기호와 키워드 목차 </p>
-  <p> 개념 목차 </p>
+
+  
+  <h1> HTML 3일차 </h1>
+  <p> 공부한 자료: <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Basic_HTML_syntax">Mozilla Developer Network 학습자료의 기초 HTML 문법</a> </p>
+  <h3> 논리 속성 </h2>
+    <p> 논리 속성은 참이나 거짓으로 설정되는 속성이다. 논리 속성을 값 없이 쓰거나, 
+      어떤 값이든 넣어서 쓰면 참으로 설정된다. 매뉴얼에서는 값을 비어있는 문자열이나, 
+      논리 속성 이름으로 설정하라고 하지만, 다른 값을 넣어도 똑같이 작동한다. 
+      반대로 논리 속성을 요소 안에 쓰지 않으면, 해당 논리 속성은 거짓으로 설정된다. 
+    </p>
+  <h3> 논리 속성이 있는 요소 예시 </h3>
+  <p>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">
+      <code> &lt;input type="입력방법" /&gt; </code>
+    </a>
+    웹페이지에 입력을 받을 수 있는 요소를 만든다.
+  </p>
+  <p>
+    예제 코드: <code> &lt;input type="text" /&gt; </code>
+  </p>
+  <p> 실행 결과: <input type="text" /> </p>
+  <p> <code> disabled </code> 논리 속성은 값을 변경할 수 없게 한다. </p>
+  <p>
+    예제 코드: <code> &lt;input type="text" disabled /&gt; </code>
+  </p>
+  <p> 실행 결과: <input type="text" disabled /> </p>
+  <h2> HTML 문서의 구성 </h2>
+  <p> HTML 문서는 다음과 같이 구성되어 있다. </p>
+  <code><pre>
+    &lt;!doctype html&gt;
+    &lt;html lang="ko-KR"&gt;
+      &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;제목&lt;/title&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+        &lt;p&gt;내용&lt;/p&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  </pre></code>
+  여기서, 
+
+  <ol>
+    <li>
+      <code>&lt;!doctype html&gt;</code>은 90년대 html 규격 링크를 다는데 쓰였다. 지금은 html 문서임을 정한다.
+    </li>
+    <li>
+      <code>&lt;html&gt;&lt;/html&gt;</code>은 전체 HTML 페이지에 해당하는 요소다. 
+    </li>
+    <li>
+      <code>&lt;head&gt;&lt;/head&gt;</code>는 보여지지 않는 모든 내용을 담는 요소다. 스타일, 쓸 문자들 등이 있다.
+    </li>
+    <li>
+      <code>&lt;meta charset="utf-8" /&gt;</code>는 UTF-8로 인코딩된 문자들을 쓰겠다는 것을 의미한다.
+    </li>
+    <li>
+      <code>&lt;title&gt;&lt;/title&gt;</code>은 페이지의 제목을 설정한다. 
+    </li>
+    <li>
+      <code>&lt;body&gt;&lt;/body&gt;</code>는 페이지에 보이는 모든 것을 담는 요소다. 
+    </li>
+  </ol>
+
+  <h2> HTML에서 공백문자 </h2>
+  <p> 공백 문자를 많이 쓰더라도 띄어쓰기 한칸으로 인식된다. 다음 두 코드는 같은 결과를 보여준다. </p>
+  <code><pre>
+    &lt;p id="공백없음"&gt; 띄어 쓰기 &lt;/p&gt;
+
+    &lt;p id="공백많음"&gt; 띄어 
+          쓰기 &lt;/p&gt;
+  </pre></code>
+
+  <h2> HTML에서 특수문자 쓰기 </h2>
+  <p> 
+    HTML에서 <code><</code>, <code>></code>, <code>"</code>, <code>'</code>, <code>&</code>는 특수문자이다. 
+    <code><</code>는 <code>&amp;lt;</code>로, <code>></code>는 <code>&amp;gt;</code>로, 
+    <code>"</code>는 <code>&amp;quot;</code>로, <code>'</code>는 <code>&amp;apos;</code>로,
+    <code>&</code>는 <code>&amp;amp;</code>로 쓸 수 있다.
+  </p>
+  <p> 예제 코드: <code>&amp;lt; &amp;amp;lt;</code> </p>
+  <p> 실행 결과: <code>&lt; &amp;lt;</code> </p>
+
+
+  <h2> HTML 주석 </h2>
+  <p>
+    HTML에서 주석을 쓰려면 <code>&lt;!--</code>와 <code>--&gt;</code> 사이에 쓴다. 
+  </p>
+  <p> 예제 코드: <code>&lt;p&gt;주석 밖&lt;/p&gt; &lt;!-- &lt;p&gt;주석 안&lt;/p&gt; --&gt;</code> </p>
+  <p> 실행 결과: </p>
+  <p>주석 밖</p> <!--주석 안-->
 
 </body>
 </html>
