@@ -264,7 +264,7 @@
   
   <h1> HTML 3일차 </h1>
   <p> 공부한 자료: <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Basic_HTML_syntax">Mozilla Developer Network 학습자료의 기초 HTML 문법</a> </p>
-  <h3> 논리 속성 </h2>
+  <h3> 논리 속성 </h3>
     <p> 논리 속성은 참이나 거짓으로 설정되는 속성이다. 논리 속성을 값 없이 쓰거나, 
       어떤 값이든 넣어서 쓰면 참으로 설정된다. 매뉴얼에서는 값을 비어있는 문자열이나, 
       논리 속성 이름으로 설정하라고 하지만, 다른 값을 넣어도 똑같이 작동한다. 
@@ -473,5 +473,185 @@
   <p> 6.11.7 컴파일러 지시 ... 203 </p>
   <p> 6.11.8 미리 정해진 매크로 이름 ... 203 </p>
 
-</body>
+  <h1> HTML 4일차 </h1>
+  <p> 공부한 자료: 
+    <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Webpage_metadata">
+      MDN docs -> core learning modules -> HTML -> head
+    </a> 
+  </p>
+  <h2> head와 메타 데이터 </h2>
+    <p> 
+      head에는 화면에는 보이지 않는 메타데이터가 저장된다. 
+      페이지 제목, 그래픽 관련 설정, 탭에 표시되는 아이콘, 키워드 등이 여기에 해당한다. 
+    </p>
+    <p> 예제 코드: </p>
+    <code><pre>
+      &lt;!doctype html&gt;
+      &lt;html lang="ko-KR"&gt;
+        &lt;head&gt;
+          &lt;meta charset="utf-8" /&gt;
+          &lt;title&gt;제목&lt;/title&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+          &lt;p&gt;내용&lt;/p&gt;
+        &lt;/body&gt;
+      &lt;/html&gt;
+    </pre></code>
+    <p> 
+      여기서, <code>&lt;head&gt;</code> 요소 안에 있는 것들이 HTML head가 된다. 
+      head 안에 있는 <code>&lt;title&gt;</code> 요소는 탭에서의 제목, 즐겨찾기의 제목이 된다. 
+    </p>
+
+    <h3> 
+      <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta">
+        <code> &lt;meta 속성이름="속성값" /&gt;</code>
+      </a>
+      : 메타 데이터를 공식적으로 HTML 문서에 추가하는 요소
+    </h3>
+
+    <p>
+      <code> charset </code> 속성은 문서에서 쓸 문자들을 정해준다. 
+      <code> utf-8 </code>은 세계 대부분 나라의 문자를 표현할 수 있고, 한글도 표현가능하다. 
+      <code> ISO-8859-1 </code>은 영어와 라틴 문자들만 표현할 수 있고, 한글은 깨진다. 
+    </p>
+
+    <p> 예제 코드: <code>&lt;meta charset="utf-8" /&gt;</code></p> 
+    <p> 실행 결과: <code>utf-8</code>의 문자들 사용 가능 </p>
+
+    <p>
+      <code> name </code> 속성과 <code> contents </code> 속성을 지정하는 방식으로
+      어떤 종류의 메타데이터가 무엇이라고 정할 수 있다.
+    </p>
+
+
+    <h1> Windows API 1일차 </h1>
+    <h2> 윈도우 창 만들기 </h2>
+    <p> 공부한 자료: 
+      <a href="https://learn.microsoft.com/en-us/cpp/windows/walkthrough-creating-windows-desktop-applications-cpp">
+        Microsoft Learn -> C++, C, Assembler -> Create a traditional Windows Desktop application
+      </a> 
+      <p> 
+        필요한 프로그램: Visual studio의 도구 설치에서 Desktop development with C++
+      </p>
+      <p>
+        프로젝트 템플릿: Windows 데스크톱 마법사에서 콘솔 애플리케이션
+      </p>
+      <p>
+        헤더 파일: Windows.h
+      </p>
+      <p>
+        Windows.h에는 전처리기 매크로와 타입들이 많이 쓰여서, 윈도우 버전에 상관없이 같은 동작을 보장해준다. 
+        그 예로 <code>WINAPI</code>, <code>HINSTANCE</code>, <code>_IN_</code> 등이 있다. 
+        IntelliSense의 Quick Info 기능을 쓰면 매크로와 타입의 정의를 볼 수 있다. 
+        궁금한 단어를 클릭하고, Ctrl+K, Ctrl+I를 누르면 된다. 
+      </p>
+      <p>
+        창을 만들려면 <code>WinMain</code> 함수를 정의한다. 
+        <code>WinMain</code> 함수의 첫번째 인자가 <code>HINSTANCE</code> 타입인데, 
+        이 인자는 <a href="https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-winmain">현재 앱을 의미하는 핸들</a>이 된다. 
+        <code>WinMain</code>에서 제일 먼저 하는 일은 창 관련 설정인 <code>WNDCLASSEX</code> 
+        구조체 변수에 창 정보를 저장하는 것인데, 여기서 <code>.hInstance</code>에 첫번째 인자를 저장한다. 
+        그 외에 이벤트 발생시 호출할 함수, 커서 등 다른 정보들도 저장한다. 
+        그리고, <code>RegisterClassEx</code>함수의 파라미터로 구조체의 포인터를 전달해서 실행하면
+        윈도우 운영체제에 현재 어플리케이션과 창 정보가 등록된다. 
+        그리고나서, <code>CreateWindowEx</code>에 현재 앱 핸들, 윈도우 제목 등의 정보를 전달해서 
+        실행하면, 창이 만들어지고, 리턴값으로 창 핸들을 받는다. 
+        <code>ShowWindow</code> 함수에 창 핸들을 전달해서 실행하면 창이 보인다. 
+      </p>
+    </p>
+    <h2> 후크 개요 </h2>
+    <p> 공부한 자료:
+      <a href="https://learn.microsoft.com/en-us/windows/win32/winmsg/about-hooks">
+        Microsoft Learn -> Windows -> 앱 -> Win32 -> Desktop Technologies -> Desktop App User Interface -> Windows and Messages -> 후크 개요
+      </a>
+    </p>
+    <p> 
+      후크란 앱이 마우스, 키보드, 메시지와 같은 이벤트들을 인터셉트하게 해주는 방법이다. 
+      후크 함수로 이벤트를 받은 다음에 변형하거나 없앨 수도 있다. 
+      후크가 쓰이는 경우는, 디버깅, 매크로, F1 키 헬프 메뉴, 마우스/키보드 입력, 트레이닝 앱이 있다.
+      후크는 컴퓨터를 느리게 만들기 때문에 최소한만 쓰고 가능한 빨리 제거해야 한다. 
+      후크 체인, 후크 함수, 후크 종류에 대해 이어서 설명한다. 
+    </p>
+    <h3> 후크 체인 </h3>
+    <p>
+      메시지 종류별로 후크가 다루는 방식이 다르다. 
+      예를 들어 <code>WH_MOUSE</code> 후크는 마우스 메시지를 처리한다. 
+      각 후크 타입은 별도의 후크 체인으로 관리되는데, 
+      여기서 후크 체인은 후크 함수라고 불리는 앱에서 정의된 함수들에 대한 포인터들의 리스트다. 
+      특정 후크 타입의 메시지가 발생하면, 시스템에서는 해당 메시지를 후크 체인에 있는 후크 함수들에
+      하나씩 전달한다. 
+      어떤 후크 타입의 후크 함수들은 메시지를 읽을 수만 있고, 다른 후크 타입에 대한 후크 함수들은 
+      메시지를 변경하거나, 나머지 후크 체인에 전달되지 않게 할 수 있다. 
+    </p>
+    <h3> 후크 함수 </h3>
+    <p> 
+      특정 후크 타입을 쓰기 위해, 개발자는 후크 함수를 만들고, <code>SetWindowsHookEx</code> 함수를
+      써서 후크 체인에 이를 설치한다. 후크 함수는 다음과 같은 문법을 따라야 한다. 
+    </p>
+    <code><pre>
+      LRESULT CALLBACK HookProc(
+        int nCode,
+        WPARAM wParam,
+        LPARAM lParam
+      )
+      {
+        // 이벤트 처리
+        ...
+
+        return CallNextHookEx(NULL, nCode, wParam, lParam);
+      }
+    </pre></code>
+    <p> <code>HookProc</code>은 앱에서 정의된 이름이 들어갈 자리를 표시하고 있다. </p>
+    <p> 
+      <code>nCode</code>, <code>wParam</code>, <code>lParam</code>은 후크 종류마다 다른데, 
+      보통 <code>nCode</code>는 후크 함수가 어떤 상황에 대한 일을 할지 정해주는 코드고, 
+      <code>wParam</code>과 <code>lParam</code>은 메시지 관련 정보가 들어간다. 
+    </p>
+    <p>
+      <code>CallNextHookEx</code>를 호출하면 이벤트를 다음 후크 함수에게 넘겨준다.
+    </p>
+
+    <p>
+      <code>SetWindowsHookEx</code>는 인자로 받은 후크 함수를 항상 후크 체인의 제일 앞에 설치한다.
+      어떤 후크 종류는 메시지를 관찰만 할 수 있기 때문에 <code>CallNextHookEx</code>를 호출했는지
+      여부와 관계 없이 메시지를 다음 후크 함수에게 전달하지만, 다른 후크 종류에서는 
+      <code>CallNextHookEx</code>를 호출하지 않으면 다음 후크 함수가 실행되지 않는다. 
+    </p>
+
+    <h3> 후크 타입 </h3>
+    <p>
+      <code>WH_CBT</code> 후크 함수는 창의 상태나 크기가 바뀌기 전, 시스템 명령어 실행 전, 
+      마우스, 키보드 이벤트를 끝내기 전, 입력 포커스를 설정하기 전에 호출된다. 컴퓨터 기반 트레이닝
+      앱을 위해 만들어졌다. 
+    </p>
+
+    <p>
+      <code>WH_KEYBOARD_LL</code> 후크 함수는 키보드 입력 이벤트가 쓰레드에서 처리되기 전에 
+      먼저 확인할 수 있게 해준다. 
+    </p>
+
+    <p>
+      <code>WH_KEYBOARD</code> 후크 함수는 키보드 입력 이벤트를 관찰할 수 있게 해준다.
+    </p>
+
+    <p>
+      <code>WH_MOUSE_LL</code> 후크 함수는 마우스 입력 이벤트가 처리되기 전에 확인하게 해준다.
+    </p>
+
+    <p>
+      <code>WH_MOUSE</code> 후크 함수는 마우스 입력 이벤트를 관찰할 수 있게 해준다. 
+    </p>
+    
+    <h2> 후크 쓰기 </h2>
+    <p> 공부한 자료:
+      <a href="https://learn.microsoft.com/en-us/windows/win32/winmsg/using-hooks">
+        Microsoft Learn -> Windows -> 앱 -> Win32 -> Desktop Technologies -> Desktop App User Interface -> Windows and Messages
+      </a>      
+    </p>
+    <p>
+      
+    </p>
+
+  
+  </body>
 </html>
