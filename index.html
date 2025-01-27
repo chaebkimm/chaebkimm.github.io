@@ -648,9 +648,23 @@
         Microsoft Learn -> Windows -> 앱 -> Win32 -> Desktop Technologies -> Desktop App User Interface -> Windows and Messages
       </a>      
     </p>
+    <h3> 후크 설치하고 해제하기 </h3>
     <p>
-      
+      <code>SetWindowsHookEx</code> 함수를 호출해서 후크 함수를 설치할 수 있고, 이 때 
+      어떤 후크가 후크 함수를 실행할지, 후크 함수가 어떤 쓰레드에 결합될지, 후크 함수의 포인터가
+      매개변수로 전달된다.
     </p>
+    <p>
+      <code>UnhookWindowsHookEx</code> 함수를 호출해서 설치된 후크 함수를 제거할 수 있다. 
+    </p>
+    <p>
+      단순화한 예제:
+    </p>
+    <pre><code>
+      #include &lt;windows.h&gt;
+
+      typedef 
+    </code></pre>
 
   
   </body>
