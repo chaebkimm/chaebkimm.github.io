@@ -657,15 +657,142 @@
     <p>
       <code>UnhookWindowsHookEx</code> 함수를 호출해서 설치된 후크 함수를 제거할 수 있다. 
     </p>
-    <p>
-      단순화한 예제:
-    </p>
+
+    <h2> Copilot이 만든 예제 </h2>
     <pre><code>
       #include &lt;windows.h&gt;
+      #include &lt;stdio.h&gt;
 
-      typedef 
+      LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
+        if (nCode == HC_ACTION) {
+          KBDLLHOOKSTRUCT* pKeyBoard = (KBDLLHOOKSTRUCT*) lParam;
+          if (wParam == WM_KEYDOWN) {
+            printf("Key down: %d\n", pKeyBoard->vkCode);
+          }
+          else if (wParam == WM_KEYUP) {
+            printf("Key up: %d\n", pKeyBoard->vkCode);
+          }
+        }
+        return CallNextHookEx(NULL, nCode, wParam, IParam);
+      }
+
+      int main() {
+        HHOOK hhook = SetWindowsHookEx(WH_KEYBOARD_LL, LowLevelKeyboardProc, NULL, 0);
+        MSG msg;
+        while (GetMessage(&msg, NULL, 0, 0) > 0) {
+          TranslateMessage(&msg);
+          DispatchMessage(&msg);
+        }
+        UnhookWindowsHookEx(hhook);
+        return 0;
+      }
     </code></pre>
 
-  
+    <h3><a href="https://learn.microsoft.com/en-us/windows/win32/winmsg/lowlevelkeyboardproc">LowLevelKeyboardProc 함수</a></h3>
+    <p>
+      LowLevelKeyboardProc는 SetWindowsHookExW을 호출할때 콜백 함수로 전달된다. 
+      인자로는 int nCode, WPARAM wParam, LPARAM lParam을 받는다. 
+      nCode가 0보다 작으면, CallNextHookEx를 호출해야한다. 
+      nCode의 값은 HC_ACTION(0)만 가질 수 있다. 
+      wParam은 키보드 메시지의 종류를 뜻한다. 
+      wParam의 값은 WM_KEYDOWN, WM_KEYUP, WM_SYSKEYDOWN, 
+      WM_SYSKEYUP 중 하나가 된다. 
+      lParam은 <a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-kbdllhookstruct">KBDLLHOOKSTRUCT</a> 구조체의 포인터다. 
+      KBDLLHOOKSTRUCT의 구조는 vkCode, scanCode, flags, time, dwExtraInfo다. 
+      vkCode는 1부터 254까지 범위의 키보드의 키에 해당하는 숫자다. 
+      scanCode는 키에 대한 하드웨어 코드다. 
+      flags는 ALT가 눌렸는지, 확장키인지 등의 정보를 준다. 
+      time은 메시지의 시간을 보내준다. 
+      dwExtraInfo는 추가 메시지를 보내준다. 
+    </p>
+    <p>
+      <code>WH_KEYBOARD_LL</code> 타입의 훅은 이를 설치한 쓰레드의 
+      맥락에서 호출된다. 
+      호출되는 방식은 이를 설치한 쓰레드에 메시지를 전달하는 것이다. 
+      그래서 후크를 설치한 쓰레드에는 메시지 루프가 있어야 한다. 
+    </p>
+    <p>
+      키보드 입력은 로컬 키보드 드라이버에서 올 수 있고,
+      <code>keybd_event</code> 함수에서도 호출될 수 있다. 
+      보통 주어진 최대 처리 시간은 1초다. 
+    </p>
+    <h3>
+      <a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-callnexthookex">
+        CallNextHookEx
+      </a> 함수는 후크 체인에서 다음 함수로 넘어간다. 
+    </h3>
+    <p>
+      인수로는 HHOOK hhk, int nCode, WPARAM wParam, LPARAM lParam이 있다. 
+      hhk 파라미터는 무시된다. 
+      nCode는 후크 정보를 어떻게 해석할지에 대한 코드다. 
+      wParam과 lParam에는 현재 후크에 대한 정보가 들어있다. 
+    </p>
+    <h3>
+      <a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowshookexw">
+        SetWindowsHookExW
+      </a> 함수는 후크 함수를 설치한다.
+    </h3>
+    <p>
+      인수는 int idHook, HOOKPROC lpfn, HINSTANCE hmod, DWORD dwThreadId다.
+      idHook 파라미터는 어떤 후크인지를 뜻한다. 
+      lpfn 파라미터는 후크 함수에 대한 포인터다. 
+      hmod 파라미터는 lpfn 후크 함수가 정의된 DLL에 대한 핸들이다. 
+      dwThreadId 파라미터는 후크 함수가 연결된 쓰레드를 뜻한다. 
+    </p>
+    <h3>
+      <a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessage">
+        GetMessage
+      </a> 함수는 메시지 큐에서 메시지를 꺼내온다. 
+    </h3>
+    <p>
+      매개변수는 LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax다. 
+      lpMsg는 메시지 정보를 저장할 구조체의 포인터다. 
+      hWnd는 메시지를 받으려는 창에 대한 핸들이다. 
+      NULL일 때 현재 스레드에 속한 모든 윈도우의 메시지를 받는다. 
+      wMsgFilterMin, wMsgFilterMax는 처리할 메시지 번호의 
+      최소값, 최대값이다. 모두 0으로 설정하면 모든 메시지를 받는다. 
+      리턴값은 메시지가 WM_QUIT일 때 0이고, 그렇지 않으면 0이 아니다. 
+    </p>
+    <h3>
+      <a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translatemessage">
+        TranslateMessage
+      </a> 함수는 가상 키에서 키보드 문자를 해석한다.  
+    </h3>
+    <p>
+      매개변수는 MSG *lpMsg를 받는다. 
+      번역을 했을 때만 0이 아닌 값을 리턴한다.
+    </p>
+    <h3>
+      <a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessage">
+        DispatchMessage
+      </a> 함수는 메시지에 해당하는 창의 후크 함수를 실행한다.  
+    </h3>
+    <p>
+      매개변수는 MSG *lpMsg를 받는다. 
+      후크 함수에서 리턴한 값을 리턴하며, 보통 쓰이지 않는다. 
+    </p>
+    <h2>
+      <a href="https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues?source=recommendations">
+        메시지와 메시지 큐
+      </a>
+    </h2>
+    <p>
+      MS-DOS 앱에서는 입력을 받기 위해서 함수 호출을 했다. 
+      창이 있는 앱들은 이벤트를 쓰기 때문에, 시스템이 입력을 전달해주기를 기다린다. 
+      시스템은 앱의 다양한 창에 입력을 전달해준다. 
+      각각의 창은 함수를 가지고 있어서, 시스템이 입력을 전달할 때 해당 함수를 호출한다. 
+      가장 앞에 있는 창이 몇초 이상 메시지에 반응하지 않으면, 
+      시스템은 그 창이 응답하지 않는다고 본다. 
+    </p>
+    <h3>
+      윈도우 메시지
+    </h3>
+    <p>
+      시스템은 윈도우 함수에 입력을 전달할 때 메시지 형태로 한다. 
+      메시지는 시스템과 앱에서 만들 수 있다. 
+      시스템이 메시지를 만들 때는, 마우스, 키보드 입력이 있을 때, 
+      그리고 앱에서 창 크기나 시스템 폰트를 바꿀 때 등이다. 
+      앱이 메시지를 만들 때는, 자신의 또는 다른 앱의 창을 조절할 때다. 
+    </p>
   </body>
 </html>
