@@ -1377,4 +1377,105 @@
   <p> 기호와 키워드 차례 </p>
   <p> 개념 차례 </p>
 
+  <h1> HTML 8일차 </h1>
+  <h2> 
+    <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Lists">
+      리스트
+    </a>
+  </h2>
+
+  <p> 리스트를 웹페이지에서 쓸 때 동그라미로, 숫자로, 기호 없이 쓸 수 있다 </p>
+
+  <h3>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ul">
+      <code>&lt;ul&gt;</code></a>로 동그라미 리스트를 만든다.
+  </h3>
+
+  <p> 리스트의 내용은
+    <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/li">
+      <code>&lt;li&gt;</code></a>로 표시한다. 
+  </p>
+
+  <p> 예제 코드: </p>
+  <code><pre>
+    &lt;ul&gt;
+        &lt;li&gt; 동그라미1 &lt;/li&gt;
+        &lt;li&gt; 동그라미2 &lt;/li&gt;
+        나머지
+        동그라미
+        없음
+    &lt;/ul&gt;
+  </pre></code>
+  <p> 실행 결과: </p>
+  <ul>
+    <li> 동그라미1 </li>
+    <li> 동그라미2 </li>
+    나머지
+    동그라미
+    없음
+  </ul>
+
+  <h3>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ol">
+      <code>&lt;ol&gt;</code></a>로 숫자 리스트를 만든다. 
+  </h3>
+    
+  <p> 여기서도 리스트의 내용은
+    <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/li">
+      <code>&lt;li&gt;</code></a>로 표시한다. 
+  </p>
+  
+  <p> 예제 코드: </p>
+  <code><pre>
+    &lt;ol&gt;
+        &lt;li&gt; 숫자1 &lt;/li&gt;
+        &lt;li&gt; 숫자2 &lt;/li&gt;
+        나머지
+        숫자
+        없음
+    &lt;/ol&gt;
+  </pre></code>
+  <p> 실행 결과: </p>
+  <ol>
+    <li> 숫자1 </li>
+    <li> 숫자2 </li>
+    나머지
+    숫자
+    없음
+  </ol>
+
+  <h3>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dl">
+      <code>&lt;dl&gt;</code></a>로 기호 없는 리스트를 만든다. 
+  </h3>
+
+  <p> 리스트의 내용 중 들여쓰기를 하지 않을 부분은 
+    <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dt">
+      <code>&lt;dt&gt;</code></a>로 표시한다. 
+  </p>
+
+  <p> 리스트의 내용 중 들여쓰기를 할 부분은 
+    <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dd">
+      <code>&lt;dd&gt;</code></a>로 표시한다. 
+  </p>
+
+  <p> 예제 코드: </p>
+  <code><pre>
+    &lt;dl&gt;
+        &lt;dt&gt; 들여쓰기 없음 &lt;/dt&gt;
+        &lt;dd&gt; 들여쓰기 있음 &lt;/dd&gt;
+        나머지
+        들여쓰기
+        없음
+    &lt;/ol&gt;
+  </pre></code>
+  <p> 실행 결과: </p>
+  <ol>
+    <dt> 들여쓰기 없음 </dt>
+    <dd> 들여쓰기 있음 </dd>
+    나머지
+    들여쓰기
+    없음
+  </ol>
+
   </html>
