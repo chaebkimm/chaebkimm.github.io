@@ -1672,4 +1672,239 @@
   <p> 참고 문헌 </p>
   <p> 차례 </p>
 
-  </html>
+  <h1> PNG 파일 구조 </h1>
+  
+  <p>
+    공부한 자료 : 
+    <a href="http://www.libpng.org/pub/png/spec/1.2/png-1.2-pdg.html#Compression">
+      PNG (Portable Network Graphics) specification v1.2
+    </a>
+  </p>
+
+  <h3> 3장 파일 구조 </h3>
+
+  <p> 3.1 PNG 파일 시그니처 </p>
+  <p> 모든 PNG 파일의 첫 여덟 바이트는 다음 십진수 값을 가진다: </p>
+  <code> 137 80 78 71 13 10 26 10 </code>
+  <p> 이어서 IHDR 뭉치를 시작으로 하는 뭉치들이 나오고, IEND 뭉치로 끝난다. </p>
+
+  <p> 3.2 뭉치의 구성 </p>
+  <p> 모든 뭉치는 네 파트로 이뤄져있다. </p>
+  <p> 길이: 뭉치의 데이터 파트에 몇 바이트가 있는지를 4바이트 unsigned int로 나타낸다. </p>
+  <p> 뭉치 타입: 4바이트 뭉치 타입 코드로 영어 대소문자의 아스키코드로 정해진다. </p>
+  <p> 데이터: 크기는 0바이트일 수도 있고 제한이 없다. 타입에 적절한 데이터 바이트다. </p>
+  <p> CRC: 뭉치 타입 파트와 데이터 파트에 대해 값을 확인해주는 숫자다. </p>
+
+  <h3> 4장 뭉치 규격 </h3>
+  <p> 적합한 PNG 파일은 IHDR 뭉치 하나, 하나 이상의 IDAT 뭉치, IEND 뭉치 하나가 있어야 한다. </p>
+  <p> IHDR 이미지 헤더 </p>
+  <p> IHDR 뭉치는 반드시 가장 먼저 나와야 한다. 내용은: </p>
+  <pre><code>
+    폭        4바이트
+    높이      4바이트
+    비트깊이  1바이트
+    색깔종류  1바이트
+    압축방법  1바이트
+    필터방법  1바이트
+    순서변경  1바이트 
+  </code></pre>
+  <p> 
+    폭과 높이는 이미지 크기 관련 값이고, 픽셀 단위다. 0은 부적합한 값이다. 
+    비트깊이는 샘플 또는 팔레트 색깔당 몇비트를 쓸 것인지를 정한다. 
+    색깔종류는 팔레트를 쓸지, 색깔을 쓸지, 투명도를 쓸지를 정한다. 
+    색깔종류에 따라 가능한 비트깊이 값들이 다르다. 
+    압축방법과 필터방법은 현재 0만 지원된다. 
+    순서변경은 0을 하면 해당 없고, 1을 하면 아담7 방법으로 픽셀이 저장되는 순서를 바꾼다. 
+  </p>
+
+  <p> IDAT 이미지 데이터 </p>
+  <p> IDAT 뭉치의 데이터는 다음과 같이 만든다. </p>
+  <p> 이미지의 첫번째 줄부터, 왼쪽 픽셀부터 차례대로 색깔 값을 늘어놓는다. </p>
+  <p> 트루컬러 픽셀의 경우 빨간색, 초록색, 파란색 순서로 나온다. </p>
+  <p> 각 줄에 필터를 적용한다. 필터를 적용하지 않을 때는 각 줄의 앞에 0을 붙인다.</p>
+  <p> 압축 방법에 따라 데이터를 압축한다. </p>
+
+  <p> IEND 이미지 끝 </p>
+  <p> IEND 뭉치는 가장 마지막에 나와야 한다. PNG의 끝을 표시하며, 데이터는 없다. </p>
+
+  <h3> 5장 압축 방법 </h3>
+  <p> PNG 안에 있는 데이터는 zlib 포맷으로 저장되어 있다. zlib 포맷은:</p>
+  <code><pre>
+    압축 방법/플래그 코드
+    추가 플래그/확인 비트 
+    압축된 데이터 
+    체크 값
+  </pre></code>
+  <p> zlib 포맷에 대한 자세한 자세한 내용은 zlib 규격[RFC-1950]에 있다. </p>
+  <p> 압축 방법에 대한 자세한 내용은 압축 규격[RFC-1951]에 있다. </p>
+
+  <h3> 15장 CRC 샘플 코드 </h3>
+  <pre><code>
+    unsigned long crc_table[256];
+    int crc_table_computed = 0;
+    void make_crc_table(void)
+    {
+      unsigned long c;
+      int n, k;
+
+      for (n = 0; n &lt; 256; n++) {
+        c = (unsigned long) n;
+        for (k = 0; k &lt; 8; k++) {
+          if (c & 1)
+            c = 0xedb88320L ^ (c >> 1);
+          else
+            c = c >> 1;
+        }
+        crc_table[n] = c;
+      }
+      crc_table_computed = 1;
+    }
+
+    unsigned long update_crc(unsigned long crc, unsigned char *buf, int len)
+    {
+      unsigned long c = crc;
+      int n;
+
+      if (!crc_table_computed)
+        make_crc_table();
+      for (n = 0; n &lt; len; n++) {
+        c = crc_table[(c ^ buf[n]) & 0xff] ^ (c >> 8);
+      }
+      return c;
+    }
+
+    unsigned long crc(unsigned char *buf, int len)
+    {
+      return update_crc(0xffffffffL, buf, len) ^ 0xffffffffL;
+    }
+  </code></pre>
+
+  <h1> ZLIB 압축 데이터 포맷 </h1>
+  
+  <p>
+    공부한 자료 : 
+    <a href="https://www.rfc-editor.org/rfc/rfc1950">
+      ZLIB Compressed Data Format Specification v3
+    </a>
+  </p>
+
+  <h3> 2.2 데이터 포맷 </h3>
+
+  <p> zlib은 다음과 같은 구조로 되어 있다: </p>
+  <p> |CMF|FLG|...데이터...|ADLER32| </p>
+
+  <p> CMF는 비트 0부터 3까지: CM (압축 방법), 비트 4부터 7까지: CINFO (압축 정보)다. </p>
+  <p> CM = 8이 PNG에서 쓰인다. </p>
+  <p> CINFO는 2를 지수로 한 윈도우 크기의 로그 빼기 팔이다. CINFO=7이 32K. </p>
+
+  <p> FLG는 다음과 같이 구성되어있다. </p>
+  <pre><code>
+    bits 0 to 4   FCHECK (CMF와 FLG에 대한 확인 비트)
+    bit 5         FDICT (사전을 쓸 것인지 여부)
+    bits 6 to 7   FLEVEL (압축된 정도)
+  </code></pre>
+
+  <p> FCHECK는 CMF와 FLG를 합친 것 (CMF*256 + FLG)이 31의 배수가 되게 하는 값이다. </p>
+
+  <p> FDICT는 PNG에서 0으로 설정한다. </p>
+
+  <p> FLEVEL은 압축을 얼만큼 했는지를 0 (최소) 부터 3 (최대) 까지로 나타낸다. </p>
+
+  <p> ADLER32는 압축되지 않은 데이터에 대한 확인 값이다. </p>
+
+  <h3> 부록: ADLER32 예제 코드 </h3>
+
+  <pre><code>
+    #define BASE 65521
+
+    unsigned long adler = 1L;
+
+    while (read_buffer(buffer, length) != EOF) {
+      adler = update_adler32(adler, buffer, length);
+    }
+
+    unsigned long update_adler32(unsigned long alder, unsigned char *buf, int len)
+    {
+      unsigned long s1 = adler & 0xffff;
+      unsigned long s2 = (adler >> 16) & 0xffff;
+      int n;
+
+      for (n = 0; n &lt; len; n++) {
+        s1 = (s1 + buf[n]) % BASE;
+        s2 = (s2 + s1)     % BASE;
+      }
+      return (s2 &lt;&lt; 16);
+    }
+
+    unsigned long adler32(unsigned char *buf, int len)
+    {
+      return update_adler32(1L, buf, len);
+    }
+  </code></pre>
+
+  <h1> DEFLATE 압축 데이터 </h1>
+
+  <p>
+    공부한 자료 : 
+    <a href="https://www.rfc-editor.org/rfc/rfc1951">
+      DEFLATE Compressed Data Format Specification 
+    </a>
+  </p>
+
+  <h3> 3.2.3 블록 포맷의 자세한 내용 </h3>
+
+  <p> 모든 압축 데이터 블록은 3개 헤더 비트로 시작한다. 다음과 같다: </p>
+
+  <pre><code>
+    첫번째 비트     BFINAL
+    두번째 비트     BTYPE 
+  </code></pre>
+
+  <p> BFINAL은 마지막 블록에서만 1이 된다. </p>
+
+  <p> BTYPE은 01일 때 정적 Huffman 코드로 압축되어있음을 의미한다. </p>
+
+  <p> 모든 압축 데이터는 다음 알고리즘에 따라서 디코딩 된다. </p>
+
+  <pre><code>
+    do 
+      블록 헤더 읽기
+      if 압축되어있지 않은 경우 
+        현재 처리중인 바이트에서 남은 비트를 스킵한다. 
+        LEN과 NLEN을 읽는다. 
+        LEN 바이트를 출력으로 복사한다. 
+      else 
+        if 동적 Huffman 코드로 압축되었을 때 
+          코드 트리에 따라서 읽는다. 
+        else 
+          loop (end-of-block을 인식)
+            값을 디코딩 해서 읽어온다. 
+            if 값 &lt; 256 
+              출력에 값을 복사한다. 
+            else
+              if 읽은 값이 end-of-block (256)
+                loop를 빠져나간다. 
+              else 
+                정해진 규칙에 따라 앞에서 복사해온다. 
+          loop 끝 
+    while 마지막 블록이 아님 
+  </code></pre>
+
+  <h3> 3.2.5 압축된 블록 </h3>
+
+  <p> 0 ~ 255는 바이트 값을 의미한다. 256은 블록의 끝을 의미한다. 
+    257 ~ 285에는 특별한 규칙이 있다. 
+  </p>
+
+  <h3> 3.2.6 정적 Huffman 코드 </h3>
+
+  <p> 다음과 같이 코딩 되어 있다. </p>
+
+  <pre><code>
+    바이트 값       비트수      코드 
+      0 - 143         8           00110000 - 10111111
+    144 - 255         9           110010000 - 111111111
+    256 - 279         7           0000000 - 0010111   
+    280 - 287         8           11000000 - 11000111 
+  </code></pre>
+</html>
